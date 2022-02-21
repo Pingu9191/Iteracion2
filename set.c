@@ -14,7 +14,7 @@
 
 struct _Set {
     int n_ids;
-    Id *ids;
+    Id ids[MAX_IDS];
 };
 
 /*
@@ -22,6 +22,8 @@ struct _Set {
 */
 Set *set_create() 
 {
+
+    int i = 0;
     /*Creates a pointer to a set and allocates memory for it, returning NULL in case of error*/
     Set *newSet = NULL;
 
@@ -30,11 +32,10 @@ Set *set_create()
         return NULL;
     }
 
-    /* Initialization of an empty set, saving memory for the array of ids, and checking if it has done it succesfully*/
+    /* Initialization of an empty set*/
     newSet->n_ids = NO_ID + 1;
-    if (newSet->ids = (Id *)malloc(MAX_IDS * (sizeof(Id))) == NULL) {
-        free(newSet);
-        newSet = NULL;
+    for (i = 0; i < MAX_IDS; i++) {
+        newSet->ids[i] = NO_ID;
     }
 
   return newSet;
@@ -50,9 +51,6 @@ STATUS set_destroy (Set *set)
         return ERROR;
     }
 
-    /*First it frees the array of ids, and then it frees the set*/
-    free(set->ids);
-    set->ids = NULL;
     free(set);
     set = NULL;
 
@@ -89,7 +87,7 @@ STATUS set_del_id (Set *set, Id id)
 
     /*Error control*/
     if ((!set) || (!id)) {
-        return NULL;
+        return ERROR;
     }
 
     /*Checks the position where the id coincides*/
@@ -102,7 +100,7 @@ STATUS set_del_id (Set *set, Id id)
         return ERROR;
     }
 
-    set->ids[i] = NULL;
+    set->ids[i] = NO_ID;
 
     return OK;
 }
