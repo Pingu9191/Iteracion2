@@ -127,3 +127,22 @@ STATUS set_print(Set *set)
 
     return OK;
 }
+
+//Funcion para ver si una id dada se encuentra en el set (añadida temporalmente, creo que puede ser útil)
+BOOL set_idInSet (Set* set, Id id)
+{
+    int i = 0; 
+
+    /*Checks the position where the id coincides*/
+    while (set->ids[i] != id && i < MAX_IDS) {
+        i++;
+    }
+
+    /*If it has not located the position, it reaches MAX_IDS and returns ERROR*/
+    if ( i == MAX_IDS) {
+        return FALSE;
+    } else {
+        return TRUE;
+    }
+}
+
