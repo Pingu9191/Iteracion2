@@ -2,7 +2,7 @@
  * @brief It defines the set interface
  * 
  * @file set.h
- * @author Nicolas Victorino && Ignacio Nunnez
+ * @author Nicolas Victorino
  * @version 1.0
  * @date 21-02-2022
  * @copyright GNU Public License
