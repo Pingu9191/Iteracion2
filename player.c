@@ -102,7 +102,8 @@ const char * player_get_name(Player* player) {
   }
   return player->name;
 }
-/** It gets the id of a player location
+
+/** It sets the id of a player location
   */
 STATUS player_set_location(Player * player, Id location) {
 
@@ -128,7 +129,7 @@ Id player_get_location(Player* player) {
   return player->location;
 }
 
-/** It gets the id of a player object
+/** It sets the id of a player object
   */
 STATUS player_set_object(Player * player, Id object) {
 
@@ -163,7 +164,7 @@ STATUS player_print(Player* player) {
     return ERROR;
   }
 
-  /* 1. Print the id and the name of the object */
+  /* 1. Print the id, name, location and object of the player */
   fprintf(stdout, "--> Player (Id: %ld; Name: %s; Location-id: %ld; Object-id: %ld)\n", player->id, player->name, player->location, player->object);
 
   return OK;
