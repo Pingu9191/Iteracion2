@@ -64,4 +64,7 @@ STATUS set_del_id (Set *set, Id id);
   */
 STATUS set_print (Set *set);
 
+//Funcion para ver si una id dada se encuentra en el set (añadida temporalmente, creo que puede ser útil)
+BOOL set_idInSet (Set* set, Id id);
+
 #endif
