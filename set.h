@@ -2,7 +2,7 @@
  * @brief It defines the set interface
  * 
  * @file set.h
- * @author Nicolas Victorino
+ * @author Nicolas Victorino 
  * @version 1.0
  * @date 21-02-2022
  * @copyright GNU Public License
@@ -66,5 +66,11 @@ STATUS set_print (Set *set);
 
 //Funcion para ver si una id dada se encuentra en el set (añadida temporalmente, creo que puede ser útil)
 BOOL set_idInSet (Set* set, Id id);
+
+//Funcion para ver si un set esta vacio(añadida temporalmente, creo que puede ser útil)
+BOOL set_is_empty(Set* set);
+
+//Funcion para ver si un set esta lleno(añadida temporalmente, creo que puede ser útil)
+BOOL set_is_full(Set *set);
 
 #endif
