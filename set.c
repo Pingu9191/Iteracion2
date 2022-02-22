@@ -2,7 +2,7 @@
  * @brief It implements the set module
  * 
  * @file set.c
- * @author Nicolas Victorino && Ignacio Nunnez
+ * @author Nicolas Victorino
  * @version 1.0
  * @date 21-02-2022
  * @copyright GNU Public License
