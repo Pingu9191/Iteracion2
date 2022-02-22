@@ -45,7 +45,7 @@ Space* space_create(Id id) { // Crea space a traves de una id
   newSpace->south = NO_ID;
   newSpace->east = NO_ID;
   newSpace->west = NO_ID;
-  newSpace->object = NO_ID;
+  newSpace->object = set_create();
 
   return newSpace;
 }
@@ -171,7 +171,8 @@ STATUS space_set_object(Space* space, Id id) {
   if (!space) {
     return ERROR;
   }
-  space->object = id;
+  
+  set_add_id(space->object, id);
   return OK;
 }
 /** It gets the id of the object in the given space
