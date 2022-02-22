@@ -2,7 +2,7 @@
  * @brief It implements the set module
  * 
  * @file set.c
- * @author Nicolas Victorino
+ * @author Nicolas Victorino 
  * @version 1.0
  * @date 21-02-2022
  * @copyright GNU Public License
@@ -133,6 +133,12 @@ BOOL set_idInSet (Set* set, Id id)
 {
     int i = 0; 
 
+    /*Error control*/
+    if ((!set) || (!id)) {
+        return ERROR;
+    }
+
+
     /*Checks the position where the id coincides*/
     while (set->ids[i] != id && i < MAX_IDS) {
         i++;
@@ -146,3 +152,34 @@ BOOL set_idInSet (Set* set, Id id)
     }
 }
 
+//Funcion para ver si un set esta vacio(añadida temporalmente, creo que puede ser útil)
+BOOL set_is_empty(Set *set)
+{
+    /*Error control (esta implementado con true ya que si el set es NULL, aunque no este bien, ese set está vacio*/
+    if (!set) {
+        return TRUE;
+    }
+
+    /*Comprueba que esta vacio*/
+    if (set->n_ids == 0) {
+        return TRUE;
+    } else {
+        return FALSE;
+    }
+}
+
+//Funcion para ver si un set esta lleno(añadida temporalmente, creo que puede ser útil)
+BOOL set_is_full(Set *set)
+{
+    /*Error control (esta implementado con false ya que si el set es NULL, aunque no este bien, ese set está vacio*/
+    if (!set) {
+        return FALSE;
+    }
+
+    /*Comprueba que esta lleno*/
+    if (set->n_ids == MAX_IDS) {
+        return TRUE;
+    } else {
+        return FALSE;
+    }
+}
