@@ -107,6 +107,25 @@ STATUS player_set_object(Player * player, Id object);
 Id player_get_object(Player * player);
 
 /**
+  * @brief It sets the health points (HP) of a player
+  * @author Ignacio Nunnez
+  * 
+  * @param player a pointer to the player
+  * @param health the number of HP to the player
+  * @return OK, if everything goes well or ERROR if there was some mistake 
+  */
+STATUS player_set_health(Player * player, int health);
+
+/**
+  * @brief It gets the health of a player
+  * @author Ignacio Nunnez
+  * 
+  * @param player a pointer to the player
+  * @return the number of HP of the player
+  */
+int player_get_health(Player *player);
+
+/**
   * @brief It prints the player information
   * @author Ignacio Nunnez
   *
