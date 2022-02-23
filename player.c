@@ -24,6 +24,7 @@ struct _Player {
   char name[WORD_SIZE + 1]; /*!< Name of the player */
   Id location;              /*!< Id number of the location where the player is*/
   Id object;                /*!< Id number of the object the player has*/
+  int health;
 };
 
 /** player_create allocates memory for a new player
@@ -153,6 +154,32 @@ Id player_get_object(Player* player) {
   }
 
   return player->object;
+}
+
+/** It sets the health points of a player
+  */
+STATUS player_set_health(Player * player, int health) {
+
+  /* Error control */
+  if (!player || !health || health < 0) {
+    return ERROR;
+  }
+  
+  player->health = health;
+
+  return OK;
+}
+
+/** It returns the HP of a player
+  */
+int player_get_health(Player* player) {
+
+  /* Error control */
+  if (!player) {
+    return ERROR;
+  }
+
+  return player->health;
 }
 
 /** It prints the player information
