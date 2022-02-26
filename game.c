@@ -16,13 +16,14 @@
 #include "object.h"
 #include "player.h"
 #include "space.h"
+#include "set.h"
 
 STATUS game_add_space(Game *game, Space *space);
 STATUS game_add_player(Game *game, Player *player);
 STATUS game_add_object(Game *game, Object *object);
 Id game_get_space_id_at(Game *game, int position);
 STATUS game_set_player_location(Game *game, Id id);
-STATUS game_set_object_location(Game *game, Id id);
+STATUS game_set_object_location(Game *game, Id id_obj, Id id_loc);
 
 void game_command_unknown(Game *game);
 void game_command_exit(Game *game);
@@ -45,8 +46,12 @@ STATUS game_create(Game *game)
     game->spaces[i] = NULL;
   }
 
+  for (i = 0; i < MAX_OBJECTS; i++)
+  {
+    game->object[i] = NULL;
+  }
+
   game->player = NULL;
-  game->object = NULL;
   game->last_cmd = NO_CMD;
 
   return OK;
@@ -64,8 +69,12 @@ STATUS game_destroy(Game *game)
     space_destroy(game->spaces[i]);
   }
 
+  for (i = 0; i < MAX_OBJECTS && game->object[i] != NULL; i++)
+  {
+    object_destroy(game->object[i]);
+  }
+
   player_destroy(game->player);
-  object_destroy(game->object);
 
   return OK;
 }
@@ -107,11 +116,23 @@ STATUS game_add_object(Game *game, Object *object)
 {
   /*Error control*/
   if (object == NULL)
-    {
-      return ERROR;
-    }
+  return ERROR;
 
-  game->object = object;
+  int i;
+
+  /*Searches the first object position available*/
+  while (i < MAX_OBJECTS && game->object[i] != NULL)
+  {
+    i++;
+  }
+
+  /*Error control (if there is no space position left)*/
+  if (i >= MAX_SPACES)
+  {
+    return ERROR;
+  }
+
+  game->object[i] = object;
 
   return OK;    
 }
@@ -182,7 +203,8 @@ STATUS game_set_player_location(Game *game, Id id)
   {
     return ERROR;
   }
-player_set_location(game->player, id);
+  
+  player_set_location(game->player, id);
 
   return OK;
 }
@@ -190,16 +212,16 @@ player_set_location(game->player, id);
 /*
 * Places an object in the space of the given id
 */
-STATUS game_set_object_location(Game *game, Id id)
+STATUS game_set_object_location(Game *game, Id id_obj, Id id_loc)
 {
 
   /*Error control*/
-  if (id == NO_ID)
+  if (id_obj == NO_ID || id_loc == NO_ID)
   {
     return ERROR;
   }
 
-  space_set_object(game_get_space(game, id), object_get_id(game->object));
+  space_set_object(game_get_space(game, id_loc), id_obj);
 
   return OK;
 }
@@ -215,13 +237,13 @@ Id game_get_player_location(Game *game)
 /*
 * Gets the location of an object
 */
-Id game_get_object_location(Game *game)
+Id game_get_object_location(Game *game, Id id_obj)
 {
   int i;
 
   /*Goes space from space if there's space with object*/
   for (i=0 ; i < MAX_SPACES ; i++) {
-    if (space_get_object(game->spaces[i]) != NO_ID) {
+    if (set_find_id(space_get_object(game->spaces[i]), id_obj) == TRUE) {
       return space_get_id(game->spaces[i]);
     }
   }
@@ -299,7 +321,11 @@ void game_print_data(Game *game)
   }
 
   /*2. Printf the object loaction*/
-  printf("=> Object location: %d\n", (int)game_get_object_location(game)); // CAMBIO DRASTICO
+  printf("=> Objects: \n");
+  for(i = 0 ; i < MAX_OBJECTS && game->object[i] != NULL ; i++)
+  {
+    object_print(game->object[i]);
+  }
 
   /*3. Printf the player loaction*/
   printf("=> Player location: %d\n", (int)game_get_player_location(game));
@@ -479,20 +505,29 @@ void game_command_left(Game *game)
 */
 STATUS game_command_take(Game *game) 
 {
+  char input;
+  long id_obj;
+  Id loc;
+
+  /*Ask player which object he wants to pick*/
+  scanf("%c%ld", &input, &id_obj);
+  if(input != 'O')
+  return ERROR;
+
   /*Check if Player and object are in the same place*/
-  Id o_loc = game_get_object_location(game);
-  Id p_loc = game_get_player_location(game);
-  if (o_loc != p_loc) {
+  if (game_get_object_location(game, id_obj) != game_get_player_location(game)) {
     return ERROR;
   }
 
+  loc = game_get_object_location(game, id_obj);
+
   /*Gives the object to the player*/
-  if (player_set_object(game->player, object_get_id(game->object))==ERROR) {
+  if (player_set_object(game->player, id_obj) == ERROR) {
     return ERROR;
   }
 
   /*Removes the object from the space*/
-  if (space_set_object(game_get_space(game, game_get_player_location(game)), NO_ID)==ERROR) {
+  if (set_del_id(space_get_object(game_get_space(game, loc)), id_obj)==ERROR) {
     return ERROR;
   }
 
@@ -505,12 +540,12 @@ STATUS game_command_take(Game *game)
 */
 STATUS game_command_drop(Game *game)
 {
-  /*Check that object isnt somewhere on the map (means player have it)*/
-  if (game_get_object_location(game) != NO_ID)
-    return ERROR;
+  /*Checks the player has an object*/
+  if(player_get_object(game->player) == NO_ID)
+  return ERROR;
 
   /*Leaves the object on the space*/
-  game_set_object_location(game, game_get_player_location(game));
+  game_set_object_location(game, player_get_object(game->player), game_get_player_location(game));
 
   /*Removes the object from the player*/
   player_set_object(game->player, NO_ID);
