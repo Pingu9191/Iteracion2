@@ -243,7 +243,7 @@ Id game_get_object_location(Game *game, Id id_obj)
 
   /*Goes space from space if there's space with object*/
   for (i=0 ; i < MAX_SPACES ; i++) {
-    if (set_find_id(space_get_object(game->spaces[i]), id_obj) == TRUE) {
+    if (set_idInSet(space_get_object(game->spaces[i]), id_obj) == TRUE) {
       return space_get_id(game->spaces[i]);
     }
   }
@@ -552,3 +552,4 @@ STATUS game_command_drop(Game *game)
 
   return OK;
 }
+
