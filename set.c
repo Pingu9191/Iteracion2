@@ -12,9 +12,11 @@
 #include <stdlib.h>
 #include "set.h"
 
+//Tengo que cambiar las funciones para encontrar el id  y el add space con realloc
+
 struct _Set {
     int n_ids;
-    Id ids[MAX_IDS];
+    Id *ids;
 };
 
 /*
@@ -34,9 +36,7 @@ Set *set_create()
 
     /* Initialization of an empty set*/
     newSet->n_ids = NO_ID + 1;
-    for (i = 0; i < MAX_IDS; i++) {
-        newSet->ids[i] = NO_ID;
-    }
+    newSet->ids = NULL;
 
   return newSet;
 }
@@ -58,22 +58,29 @@ STATUS set_destroy (Set *set)
 }
 
 /*
-* Adds an id to a given set
+* Adds an id to a given set, reallocating memory for it and locating the first empty space
 */
 STATUS set_add_id (Set *set, Id id)
 {
+    int i = 0;
+
     /*Error control*/
     if ((!set) || (!id)) {
         return ERROR;
     }
 
-    /*Checks if it has found any space, and if not it returns ERROR. In case it has, it saves the id in the new space, that corresponds in the array to the number of ids already saved*/
-    if (set->n_ids >= MAX_IDS) {
+    Id *new_ids;
+
+    if (!(new_ids = (Id *)realloc(set->ids, set->n_ids * sizeof(Id)))) {
         return ERROR;
-    } else {
-        set->ids[set->n_ids] = id;
-        set->n_ids++;
     }
+
+    while (i < set->n_ids && set->ids[i] != NULL) {
+        i++;
+    }
+
+    set->ids[i] = id;
+    set->n_ids++;
 
     return OK;
 }
@@ -91,16 +98,17 @@ STATUS set_del_id (Set *set, Id id)
     }
 
     /*Checks the position where the id coincides*/
-    while (set->ids[i] != id && i < MAX_IDS) {
+    while ((set->ids[i] != id) && i < set->n_ids) {
         i++;
     }
 
-    /*If it has not located the position, it reaches MAX_IDS and returns ERROR*/
-    if ( i == MAX_IDS) {
+    /*If it has not located the position, it reaches n_ids and returns ERROR*/
+    if ( i == set->n_ids) {
         return ERROR;
     }
 
     set->ids[i] = NO_ID;
+    set->n_ids--;
 
     return OK;
 }
@@ -135,17 +143,17 @@ BOOL set_idInSet (Set* set, Id id)
 
     /*Error control*/
     if ((!set) || (!id)) {
-        return ERROR;
+        return FALSE;
     }
 
 
     /*Checks the position where the id coincides*/
-    while (set->ids[i] != id && i < MAX_IDS) {
+    while (set->ids[i] != id && i < set->n_ids) {
         i++;
     }
 
     /*If it has not located the position, it reaches MAX_IDS and returns ERROR*/
-    if ( i == MAX_IDS) {
+    if ( i == set->n_ids) {
         return FALSE;
     } else {
         return TRUE;
@@ -162,22 +170,6 @@ BOOL set_is_empty(Set *set)
 
     /*Comprueba que esta vacio*/
     if (set->n_ids == 0) {
-        return TRUE;
-    } else {
-        return FALSE;
-    }
-}
-
-//Funcion para ver si un set esta lleno(añadida temporalmente, creo que puede ser útil)
-BOOL set_is_full(Set *set)
-{
-    /*Error control (esta implementado con false ya que si el set es NULL, aunque no este bien, ese set está vacio*/
-    if (!set) {
-        return FALSE;
-    }
-
-    /*Comprueba que esta lleno*/
-    if (set->n_ids == MAX_IDS) {
         return TRUE;
     } else {
         return FALSE;
