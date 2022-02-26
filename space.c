@@ -177,7 +177,7 @@ STATUS space_set_object(Space* space, Id id) {
 }
 /** It gets the id of the object in the given space
   */
-Id space_get_object (Space *space)
+Set *space_get_object (Space *space) // Deberia devolver set??
 {
   if (!space || space->object == NO_ID) {
     return NO_ID;
