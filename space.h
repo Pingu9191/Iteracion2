@@ -162,7 +162,7 @@ STATUS space_set_object (Space *space, Id id);
   * @param space a pointer to the space
   * @return In case the space given or the id of the object in the space is NULL, it returns NO_ID. If not it returns the id of the object in the space
   */
-Id space_get_object (Space *space);
+Set *space_get_object (Space *space); // Deberia devolver set???
 
 /**
   * @brief It prints the space information
