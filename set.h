@@ -13,11 +13,6 @@
 
 #include "types.h"
 
-/**
-* Defines the maximum number of ids that can be saved in a set
-*/
-#define MAX_IDS 20 //Temporal, no se cuanto tiene que ser el tope
-
 typedef struct _Set Set;
 
 /**
@@ -69,8 +64,5 @@ BOOL set_idInSet (Set* set, Id id);
 
 //Funcion para ver si un set esta vacio(añadida temporalmente, creo que puede ser útil)
 BOOL set_is_empty(Set* set);
-
-//Funcion para ver si un set esta lleno(añadida temporalmente, creo que puede ser útil)
-BOOL set_is_full(Set *set);
 
 #endif
