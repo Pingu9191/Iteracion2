@@ -16,12 +16,14 @@
 #include "types.h"
 #include "player.h"
 #include "object.h"
+#include "enemy.h"
 
 typedef struct _Game
 {
   Player *player;//Id player_location;
-  Object *object;//Id object_location;
+  Object *object[MAX_OBJECTS];//Id object_location;
   Space *spaces[MAX_SPACES];
+  Enemy *enemy;
   T_Command last_cmd;
 } Game;
 
@@ -99,7 +101,7 @@ Id game_get_player_location(Game *game);
   * @param game a pointer to the game
   * @return NO_ID if theres no object located
   */
-Id game_get_object_location(Game *game);
+Id game_get_object_location(Game *game, Id id_obj);
 
 /**
   * @brief returns last cd_command
@@ -158,9 +160,10 @@ STATUS game_set_player_location(Game *game, Id id);
   * @brief sets the position of the object to a given space
   * @author Ignacio Nuñez
   *
-  * @param game a pointer to the game, @param id identifier of the object where you want to set the object
+  * @param game a pointer to the game, @param id_obj identifier of the object
+  * @param id_loc identifier of the location to place de object
   * @return OK if it doesnt detect any error, in case it does it returns ERROR
   */
-STATUS game_set_object_location(Game *game, Id id);
+STATUS game_set_object_location(Game *game, Id id_obj, Id id_loc);
 
 #endif
