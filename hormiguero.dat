@@ -8,5 +8,8 @@
 #s:127|Pasillo 7|-1|14|-1|126
 #s:14|Agujero|-1|-1|-1|127
 #s:13|Despensa|124|-1|-1|-1
-#o:10|Semilla
+#o:21|Grano|11
+#o:22|Grano|11
+#o:23|Grano|11
+#o:24|Grano|11
 #p:10|Player|-1|11
