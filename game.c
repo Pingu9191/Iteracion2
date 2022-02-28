@@ -336,7 +336,11 @@ void game_print_data(Game *game)
 */
 BOOL game_is_over(Game *game)
 {
+  if (player_get_health == 0) {
+    return TRUE;
+  } else {
   return FALSE;
+  }
 }
 
 /**
