@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include "game.h"
 #include "object.h"
 #include "player.h"
@@ -557,3 +558,28 @@ STATUS game_command_drop(Game *game)
   return OK;
 }
 
+/*
+* Command that 50%-50% drops the HP of the player or the enemy
+* If player and enemy arent in the same room, returns ERROR
+*/
+STATUS game_command_attack(Game *game)
+{
+
+  /*Checks if player and enemy are in the same room*/
+  if(player_get_location(game->player) != enemy_get_location(game->enemy))
+  return ERROR;
+
+  /*Generates random number*/
+  srand(time(NULL));
+  int i = rand() % 10;
+
+  /*Depending on the value of i, player or enemy lose HP*/
+  if(i<5){
+    player_set_health(game->player, player_get_health(game->player) - 1);
+  }
+  else{
+    enemy_set_health(game->enemy, enemy_get_health(game->enemy) - 1);
+  }
+
+  return OK;
+}
