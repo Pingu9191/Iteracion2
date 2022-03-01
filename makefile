@@ -39,7 +39,6 @@ set.o: set.c
 game_loop.o: game_loop.c
 	$(CC) $(CFLAGS) $^
 
-
 clean:
 	echo "cleaning..."
 	rm -rf *.o
