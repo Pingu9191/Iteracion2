@@ -11,6 +11,9 @@
 #ifndef SPACE_H
 #define SPACE_H
 
+#define GDESC_X 9
+#define GDESC_Y 5
+
 #include "types.h"
 #include "set.h"
 
@@ -44,6 +47,25 @@ Space* space_create(Id id);
   * @return OK, if everything goes well or ERROR if there was some mistake
   */
 STATUS space_destroy(Space* space);
+
+/**
+  * @brief It sets the gdesc of a space
+  * @author Profesores PPROG
+  * 
+  * @param space a pointer to the space
+  * @param gdesc a matrix with the gdesc structure to store
+  * @return OK, if everything goes well or ERROR if there was some mistake 
+  */
+STATUS space_set_gdesc(Space* space, char **gdesc);
+
+/**
+  * @brief It gets the gdesc of a space
+  * @author Profesores PPROG
+  * 
+  * @param space a pointer to the space
+  * @return  a matrix with the gdesc structure of the space
+  */
+const char** space_get_gdesc(Space* space);
 
 /**
   * @brief It gets the id of a space
