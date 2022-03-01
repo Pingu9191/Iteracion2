@@ -17,6 +17,7 @@ typedef struct _Player Player;
 
 #define MAX_PLAYERS 100
 #define FIRST_PLAYER 1
+#define MAX_HEALTH_PLAYER 5
 
 /**
   * @brief It creates a new player
