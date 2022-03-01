@@ -21,6 +21,7 @@ struct _Space {
   Id east;                  /*!< Id of the space at the east */
   Id west;                  /*!< Id of the space at the west */
   Set *object;              /*!< Id of the object located in the space */
+  char gdesc[GDESC_X][GDESC_Y];
 };
 
 /** space_create allocates memory for a new space
@@ -46,6 +47,7 @@ Space* space_create(Id id) { // Crea space a traves de una id
   newSpace->east = NO_ID;
   newSpace->west = NO_ID;
   newSpace->object = set_create();
+  newSpace->gdesc[0][0] = '\0';
 
   return newSpace;
 }
@@ -61,6 +63,25 @@ STATUS space_destroy(Space* space) {
   free(space);
   space = NULL;
   return OK;
+}
+
+STATUS space_set_gdesc(Space* space, char** gdesc) {
+  if(!space || !gdesc){
+    return ERROR;
+  }
+
+  if (!strcpy(*(space->gdesc), *gdesc)) {
+    return ERROR;
+  }
+
+  return OK;
+}
+
+const char** space_get_gdesc(Space* space) {
+  if(!space)
+  return NULL;
+
+  return &(space->gdesc);
 }
 
 /** It gets the id of a space
@@ -179,8 +200,8 @@ STATUS space_set_object(Space* space, Id id) {
   */
 Set *space_get_object (Space *space) // Deberia devolver set??
 {
-  if (!space || space->object == NO_ID) {
-    return NO_ID;
+  if (!space) {
+    return NULL;
   }
   return space->object;
 }
@@ -224,11 +245,18 @@ STATUS space_print(Space* space) {
     fprintf(stdout, "---> No west link.\n");
   }
 
-  /* 3. Print if there is an object in the space or not */
-  if (space_get_object(space)) {
-    fprintf(stdout, "---> Object in the space.\n");
-  } else {
-    fprintf(stdout, "---> No object in the space.\n");
+  /* 3. Print all objects in the space*/
+  printf("Set of objects:\n");
+  set_print(space->object);
+
+  /* 4. Print the gdesc*/
+  int i, j;
+
+  for(i=0;i<GDESC_X;i++){
+    for(j=0;j<GDESC_Y;j++){
+      printf("%c", space->gdesc[i][j]);
+    }
+    printf("\n");
   }
 
   return OK;
