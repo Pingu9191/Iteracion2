@@ -17,6 +17,7 @@ typedef struct _Enemy Enemy;
 
 #define MAX_ENEMIES 100
 #define FIRST_ENEMY 1
+#define MAX_HEALTH_ENEMY 5
 
 /**
   * @brief It creates a new enemy
