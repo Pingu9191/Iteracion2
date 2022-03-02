@@ -12,6 +12,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "space.h"
+#include "set.h"
 
 struct _Space {
   Id id;                    /*!< Id number of the space, it must be unique */
@@ -21,7 +22,7 @@ struct _Space {
   Id east;                  /*!< Id of the space at the east */
   Id west;                  /*!< Id of the space at the west */
   Set *object;              /*!< Id of the object located in the space */
-  char **gdesc;
+  char gdesc[GDESC_X][GDESC_Y];
 };
 
 /** space_create allocates memory for a new space
@@ -60,22 +61,22 @@ STATUS space_destroy(Space* space) {
     return ERROR;
   }
 
+  set_destroy(space->object);
   free(space);
   space = NULL;
   return OK;
 }
 
 STATUS space_set_gdesc(Space* space, char** gdesc) {
-
-  if (!space || !gdesc) {
+  if(!space || !gdesc){
     return ERROR;
   }
 
   if (!strcpy(*(space->gdesc), *gdesc)) {
     return ERROR;
   }
-  return OK;
 
+  return OK;
 }
 
 const char** space_get_gdesc(Space* space) {
@@ -194,16 +195,32 @@ STATUS space_add_object(Space* space, Id id) {
     return ERROR;
   }
   
-  set_add_id(space->object, id);
+  if(set_add_id(space->object, id)==ERROR)
+  return ERROR;
+
   return OK;
 }
 
-/** It sets set of objects for the given space
+/** It deletes one id of an object-set in the given space
+  */
+STATUS space_delete_object(Space* space, Id id) {
+  if (!space) {
+    return ERROR;
+  }
+  
+  if(set_del_id(space->object, id)==ERROR)
+  return ERROR;
+
+  return OK;
+}
+
+/** It sets set of objects  the given space
   */
 STATUS space_set_object(Space* space, Set *set) {
   if(!space)
   return ERROR;
 
+  set_destroy(space->object);
   space->object = set;
   return OK;
 }
@@ -272,12 +289,4 @@ STATUS space_print(Space* space) {
   }
 
   return OK;
-}
-
-int space_get_gdescX() {
-  return GDESC_X;
-}
-
-int space_get_gdescY() {
-  return GDESC_Y;
 }
