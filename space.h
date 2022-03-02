@@ -196,4 +196,7 @@ Set *space_get_object (Space *space); // Deberia devolver set???
   */
 STATUS space_print(Space* space);
 
+int space_get_gdescX();
+int space_get_gdescY();
+
 #endif
