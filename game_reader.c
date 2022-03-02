@@ -80,7 +80,7 @@ STATUS game_load_spaces(Game *game, char *filename)
       west = atol(toks);
       for (i = 0; i < space_get_gdescX(); i++) {
         toks = strtok(NULL, "|");
-        gdesc[i] = atol(toks);
+        strcpy(gdesc[i], toks);
       }
     /*If debug is being used, it will print all the information from the current space that is being loaded*/
 #ifdef DEBUG
@@ -111,7 +111,7 @@ STATUS game_load_spaces(Game *game, char *filename)
     status = ERROR;
   }
 
-  for (i = 0; i < space_get_gdescX; i++) {
+  for (i = 0; i < space_get_gdescX(); i++) {
     if(gdesc[i] != NULL) {
       free(gdesc[i]);
       gdesc[i] = NULL;
