@@ -179,13 +179,23 @@ STATUS space_set_object (Space *space, Set *set);
 
 /**
   * @brief It adds the id of an new object to a given space
-  * @author Nicolas Victorino
+  * @author Ignacio Nunnez
   *
   * This function sets the id of an object in a given space
   * @param space a pointer to the space, @param id id of the object we want to save in the space
   * @return OK, if everything goes well or ERROR if something went wrong during the execution
   */
 STATUS space_add_object (Space *space, Id id);
+
+/**
+  * @brief It deletes the id of an object to a given space
+  * @author Ignacio Nunnez
+  *
+  * This function sets the id of an object in a given space
+  * @param space a pointer to the space, @param id id of the object we want to delete from the space
+  * @return OK, if everything goes well or ERROR if something went wrong during the execution
+  */
+STATUS space_delete_object (Space *space, Id id);
 
 /**
   * @brief It gets the id of an object in a given space
