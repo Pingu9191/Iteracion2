@@ -21,7 +21,7 @@ struct _Space {
   Id east;                  /*!< Id of the space at the east */
   Id west;                  /*!< Id of the space at the west */
   Set *object;              /*!< Id of the object located in the space */
-  char gdesc[GDESC_X][GDESC_Y];
+  char **gdesc;
 };
 
 /** space_create allocates memory for a new space
@@ -66,15 +66,16 @@ STATUS space_destroy(Space* space) {
 }
 
 STATUS space_set_gdesc(Space* space, char** gdesc) {
-  if(!space || !gdesc){
+
+  if (!space || !gdesc) {
     return ERROR;
   }
 
   if (!strcpy(*(space->gdesc), *gdesc)) {
     return ERROR;
   }
-
   return OK;
+
 }
 
 const char** space_get_gdesc(Space* space) {
@@ -260,4 +261,12 @@ STATUS space_print(Space* space) {
   }
 
   return OK;
+}
+
+int space_get_gdescX() {
+  return GDESC_X;
+}
+
+int space_get_gdescY() {
+  return GDESC_Y;
 }
