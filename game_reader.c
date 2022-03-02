@@ -27,6 +27,21 @@ STATUS game_load_spaces(Game *game, char *filename)
   Id id = NO_ID, north = NO_ID, east = NO_ID, south = NO_ID, west = NO_ID;
   Space *space = NULL;
   STATUS status = OK;
+  int i;
+  //Temporal
+  char **gdesc;
+  if ((gdesc = (char **)malloc(sizeof(char *)*GDESC_X)) == NULL) 
+  return ERROR;
+  for (i = 0; i < GDESC_X; i++) {
+    if ((gdesc[i]= (char *)malloc(sizeof (char)*GDESC_Y)) == NULL) {
+      for (i = 0; i < GDESC_X; i++) {
+        if (gdesc[i] == NULL) {
+          free(gdesc[i]);
+        }
+      }
+      free(gdesc);
+    }
+  }
 
   /*Error control*/
   if (!filename)
@@ -63,6 +78,10 @@ STATUS game_load_spaces(Game *game, char *filename)
       south = atol(toks);
       toks = strtok(NULL, "|");
       west = atol(toks);
+      for (i = 0; i < space_get_gdescX(); i++) {
+        toks = strtok(NULL, "|");
+        gdesc[i] = atol(toks);
+      }
     /*If debug is being used, it will print all the information from the current space that is being loaded*/
 #ifdef DEBUG
       printf("Leido: %ld|%s|%ld|%ld|%ld|%ld\n", id, name, north, east, south, west);
@@ -79,6 +98,7 @@ STATUS game_load_spaces(Game *game, char *filename)
         space_set_east(space, east);
         space_set_south(space, south);
         space_set_west(space, west);
+        space_set_gdesc(space, gdesc);
         game_add_space(game, space);
       }
     }
@@ -90,6 +110,15 @@ STATUS game_load_spaces(Game *game, char *filename)
   {
     status = ERROR;
   }
+
+  for (i = 0; i < space_get_gdescX; i++) {
+    if(gdesc[i] != NULL) {
+      free(gdesc[i]);
+      gdesc[i] = NULL;
+    }
+  }
+  free(gdesc);
+  gdesc = NULL;
 
   fclose(file);
 
@@ -269,7 +298,10 @@ STATUS game_create_from_file(Game *game, char *filename)
 
   /* The player and the object are located in the first space */
   game_set_player_location(game, game_get_space_id_at(game, 0));
-  game_set_object_location(game, game_get_space_id_at(game, 0));
+
+  //Hay que cambiar esto para que soporte varios objetos. Basicamente hay que cambiar la manera en la que se cargan los objetos en game, para funcione
+  //igual que los spaces (hacer un array con todos los objects), y desde hay leer donde se tiene que cargar y hacer un loop con esta funcion y todos los objetos cargados
+  game_set_object_location(game, /*(aqui hay que ver como poner el id de cada object)*/ object_get_id(Object *object), game_get_space_id_at(game, 0));
 
   return OK;
 }
