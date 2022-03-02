@@ -82,7 +82,7 @@ const char** space_get_gdesc(Space* space) {
   if(!space)
   return NULL;
 
-  return &(space->gdesc);
+  return (const char **)space->gdesc;
 }
 
 /** It gets the id of a space
