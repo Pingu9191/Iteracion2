@@ -189,7 +189,7 @@ Id space_get_west(Space* space) {
 
 /** It sets the id of an object in the given space
   */
-STATUS space_set_object(Space* space, Id id) {
+STATUS space_add_object(Space* space, Id id) {
   if (!space) {
     return ERROR;
   }
@@ -197,6 +197,17 @@ STATUS space_set_object(Space* space, Id id) {
   set_add_id(space->object, id);
   return OK;
 }
+
+/** It sets set of objects for the given space
+  */
+STATUS space_set_object(Space* space, Set *set) {
+  if(!space)
+  return ERROR;
+
+  space->object = set;
+  return OK;
+}
+
 /** It gets the id of the object in the given space
   */
 Set *space_get_object (Space *space) // Deberia devolver set??
