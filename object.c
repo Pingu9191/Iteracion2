@@ -21,6 +21,7 @@
 struct _Object {
   Id id;                    /*!< Id number of the object, it must be unique */
   char name[WORD_SIZE + 1]; /*!< Name of the object */
+  char graphic_representation;
 };
 
 /** object_create allocates memory for a new object
@@ -110,4 +111,12 @@ STATUS object_print(Object* object) {
   fprintf(stdout, "--> Object (Id: %ld; Name: %s)\n", object->id, object->name);
 
   return OK;
+}
+
+STATUS object_set_graphic(Object *object, char symbol) {
+  object->graphic_representation = symbol;
+}
+
+char object_get_graphic(Object *object) {
+  return object->graphic_representation;
 }
