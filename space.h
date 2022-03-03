@@ -168,24 +168,24 @@ STATUS space_set_west(Space* space, Id id);
 Id space_get_west(Space* space);
 
 /**
-  * @brief It sets the id of an object in a given space
+  * @brief It adds the id of an object in a given space
   * @author Nicolas Victorino
   *
   * This function sets the id of an object in a given space
   * @param space a pointer to the space, @param id id of the object we want to save in the space
   * @return OK, if everything goes well or ERROR if something went wrong during the execution
   */
-STATUS space_set_object (Space *space, Set *set);
+STATUS space_add_object (Space *space, Id id);
 
 /**
-  * @brief It adds the id of an new object to a given space
-  * @author Ignacio Nunnez
+  * @brief It gets the id of an object in a given space
+  * @author Nicolas Victorino
   *
-  * This function sets the id of an object in a given space
-  * @param space a pointer to the space, @param id id of the object we want to save in the space
-  * @return OK, if everything goes well or ERROR if something went wrong during the execution
+  * @param space a pointer to the space
+  * @return In case the space given or the id of the object in the space is NULL, it returns NO_ID. If not it returns the id of the object in the space
   */
-STATUS space_add_object (Space *space, Id id);
+Set *space_get_object (Space *space); // Deberia devolver set???
+
 
 /**
   * @brief It deletes the id of an object to a given space
@@ -198,14 +198,13 @@ STATUS space_add_object (Space *space, Id id);
 STATUS space_delete_object (Space *space, Id id);
 
 /**
-  * @brief It gets the id of an object in a given space
+  * @brief It sets a new set of objects to the given space
   * @author Nicolas Victorino
   *
-  * @param space a pointer to the space
-  * @return In case the space given or the id of the object in the space is NULL, it returns NO_ID. If not it returns the id of the object in the space
+  * @param space a pointer to the space @param set a pointer to the new set
+  * @return In case the space given or the id of the object in the space is NULL, it returns ERROR. If not it returns OK
   */
-Set *space_get_object (Space *space); // Deberia devolver set???
-
+STATUS space_set_object(Space* space, Set*set);
 /**
   * @brief It prints the space information
   * @author Profesores PPROG
@@ -219,4 +218,25 @@ STATUS space_print(Space* space);
 int space_get_gdescX();
 int space_get_gdescY();
 
+/**
+  * @brief It allocates memory for a new gdesc
+  * @author Nicolas Victorino
+  *
+  * 
+  * @param space a pointer to the space
+  * @return char**, if it creates the gdesc succesfully, NULL if something went wrong
+  */
+char ** space_create_gdesc (Space *space);
+
+/**
+  * @brief It frees the memory allocated for the gdesc
+  * @author Nicolas Victorino
+  *
+  * 
+  * @param space a pointer to the space
+  * @return OK, if everything goes well or ERROR if there was some mistake
+  */
+ STATUS space_remove_gdesc(Space *space);
+
+int space_get_n_objects(Space *space);
 #endif
