@@ -65,4 +65,6 @@ BOOL set_idInSet (Set* set, Id id);
 //Funcion para ver si un set esta vacio(añadida temporalmente, creo que puede ser útil)
 BOOL set_is_empty(Set* set);
 
+int set_get_n_ids(Set* set);
+
 #endif
