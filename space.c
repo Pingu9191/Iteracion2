@@ -12,7 +12,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "space.h"
-#include "set.h"
 
 struct _Space {
   Id id;                    /*!< Id number of the space, it must be unique */
@@ -22,7 +21,7 @@ struct _Space {
   Id east;                  /*!< Id of the space at the east */
   Id west;                  /*!< Id of the space at the west */
   Set *object;              /*!< Id of the object located in the space */
-  char gdesc[GDESC_X][GDESC_Y];
+  char **gdesc;
 };
 
 /** space_create allocates memory for a new space
@@ -48,7 +47,7 @@ Space* space_create(Id id) { // Crea space a traves de una id
   newSpace->east = NO_ID;
   newSpace->west = NO_ID;
   newSpace->object = set_create();
-  newSpace->gdesc[0][0] = '\0';
+  newSpace->gdesc = NULL;
 
   return newSpace;
 }
@@ -61,29 +60,30 @@ STATUS space_destroy(Space* space) {
     return ERROR;
   }
 
-  set_destroy(space->object);
+  space_remove_gdesc(space);
   free(space);
   space = NULL;
   return OK;
 }
 
 STATUS space_set_gdesc(Space* space, char** gdesc) {
-  if(!space || !gdesc){
+
+  if (!space || !gdesc) {
     return ERROR;
   }
 
   if (!strcpy(*(space->gdesc), *gdesc)) {
     return ERROR;
   }
-
   return OK;
+
 }
 
 const char** space_get_gdesc(Space* space) {
   if(!space)
   return NULL;
 
-  return (const char **)space->gdesc;
+  return (const char**)space->gdesc;
 }
 
 /** It gets the id of a space
@@ -190,15 +190,24 @@ Id space_get_west(Space* space) {
 
 /** It sets the id of an object in the given space
   */
-STATUS space_add_object(Space* space, Id id) {
+STATUS space_set_object(Space* space, Id id) {
   if (!space) {
     return ERROR;
   }
   
   if(set_add_id(space->object, id)==ERROR)
   return ERROR;
-
+  
   return OK;
+}
+/** It gets the id of the object in the given space
+  */
+Set *space_get_object (Space *space) // Deberia devolver set??
+{
+  if (!space) {
+    return NULL;
+  }
+  return space->object;
 }
 
 /** It deletes one id of an object-set in the given space
@@ -207,7 +216,7 @@ STATUS space_delete_object(Space* space, Id id) {
   if (!space) {
     return ERROR;
   }
-  
+
   if(set_del_id(space->object, id)==ERROR)
   return ERROR;
 
@@ -223,16 +232,6 @@ STATUS space_set_object(Space* space, Set *set) {
   set_destroy(space->object);
   space->object = set;
   return OK;
-}
-
-/** It gets the id of the object in the given space
-  */
-Set *space_get_object (Space *space) // Deberia devolver set??
-{
-  if (!space) {
-    return NULL;
-  }
-  return space->object;
 }
 
 /** It prints the space information
@@ -289,4 +288,71 @@ STATUS space_print(Space* space) {
   }
 
   return OK;
+}
+
+int space_get_gdescX() {
+  return GDESC_X;
+}
+
+int space_get_gdescY() {
+  return GDESC_Y;
+}
+
+char ** space_create_gdesc (Space *space) {
+
+  char **gdesc_new;
+  int i = 0;
+
+  if (!space)
+  return NULL;
+
+  if ((gdesc_new = (char **)malloc(sizeof(char *)*GDESC_X)) == NULL) 
+  return ERROR;
+  for (i = 0; i < GDESC_X; i++) {
+    if ((gdesc_new[i]= (char *)malloc(sizeof (char)*GDESC_Y)) == NULL) {
+      for (i = 0; i < GDESC_X; i++) {
+        if (gdesc_new[i] == NULL) {
+          free(gdesc_new[i]);
+        }
+      }
+      free(gdesc_new);
+      return NULL;
+    }
+  }
+
+  space_set_gdesc(space, gdesc_new);
+
+  return (char **)space_get_gdesc(space);
+}
+
+STATUS space_remove_gdesc(Space *space) {
+
+  char **gdesc;
+  int i = 0;
+
+  if (!space)
+  return ERROR;
+
+  gdesc = (char**) space_get_gdesc(space);
+
+  for (i = 0; i < GDESC_X; i++) {
+    if (gdesc[i] != NULL) {
+      free(gdesc[i]);
+      gdesc[i] = NULL;
+    }
+  }
+  
+  if (gdesc != NULL) {
+    free(gdesc);
+    gdesc = NULL;
+  }
+
+  return OK;
+}
+
+int space_get_n_objects(Space *space) {
+  if (!space)
+  return NO_ID;
+
+  return set_get_n_ids(space->object);
 }
