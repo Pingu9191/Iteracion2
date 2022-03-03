@@ -190,7 +190,7 @@ Id space_get_west(Space* space) {
 
 /** It sets the id of an object in the given space
   */
-STATUS space_set_object(Space* space, Id id) {
+STATUS space_add_object(Space* space, Id id) {
   if (!space) {
     return ERROR;
   }
