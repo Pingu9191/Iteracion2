@@ -69,4 +69,8 @@ STATUS object_set_name(Object* space, char* name);
   */
 STATUS object_print(Object* object);
 
+STATUS object_set_graphic(Object *object, char symbol);
+
+char object_get_graphic(Object *object);
+
 #endif
