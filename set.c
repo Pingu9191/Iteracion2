@@ -25,7 +25,6 @@ struct _Set {
 Set *set_create() 
 {
 
-    int i = 0;
     /*Creates a pointer to a set and allocates memory for it, returning NULL in case of error*/
     Set *newSet = NULL;
 
@@ -75,7 +74,7 @@ STATUS set_add_id (Set *set, Id id)
         return ERROR;
     }
 
-    while (i < set->n_ids && set->ids[i] != NULL) {
+    while (i < set->n_ids && (set->ids[i] != NULL)) {
         i++;
     }
 
@@ -107,7 +106,8 @@ STATUS set_del_id (Set *set, Id id)
         return ERROR;
     }
 
-    set->ids[i] = NO_ID;
+    set->ids[i] = set->ids[set->n_ids - 1];
+    set->ids[set->n_ids - 1] = NO_ID;
     set->n_ids--;
 
     return OK;
@@ -174,4 +174,12 @@ BOOL set_is_empty(Set *set)
     } else {
         return FALSE;
     }
+}
+
+int set_get_n_ids(Set* set) {
+    if (!set) {
+        return NO_ID;
+    }
+
+    return set->n_ids;
 }
