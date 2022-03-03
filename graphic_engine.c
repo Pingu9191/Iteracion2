@@ -154,6 +154,8 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game)
     screen_area_puts(ge->descript, str);
     sprintf(str, "Player object: %d", (int)player_get_object(game->player));
     screen_area_puts(ge->descript, str);
+    sprintf(str, " Player HP: %d", player_get_health(game->player));
+    screen_area_puts(ge->descript, str);
     sprintf(str, "Enemy location: %d", (int)enemy_get_location(game->enemy));
     screen_area_puts(ge->descript, str);
     sprintf(str, "Enemy HP: %d", enemy_get_health(game->enemy));
