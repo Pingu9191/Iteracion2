@@ -12,8 +12,6 @@
 #include <stdlib.h>
 #include "set.h"
 
-//Tengo que cambiar las funciones para encontrar el id  y el add space con realloc
-
 struct _Set {
     int n_ids;
     Id *ids;
@@ -61,25 +59,20 @@ STATUS set_destroy (Set *set)
 */
 STATUS set_add_id (Set *set, Id id)
 {
-    int i = 0;
 
     /*Error control*/
-    if ((!set) || (!id)) {
+    if ((!set) || (!id) || (id==NO_ID) ) {
         return ERROR;
     }
 
-    Id *new_ids;
-
-    if (!(new_ids = (Id *)realloc(set->ids, set->n_ids * sizeof(Id)))) {
-        return ERROR;
-    }
-
-    while (i < set->n_ids && (set->ids[i] != NULL)) {
-        i++;
-    }
-
-    set->ids[i] = id;
     set->n_ids++;
+
+    /*Reserves memory for one more*/
+    if (!(set->ids = (Id *)realloc(set->ids, set->n_ids * sizeof(Id)))) {
+        return ERROR;
+    }
+
+    set->ids[set->n_ids - 1] = id;
 
     return OK;
 }
@@ -97,7 +90,10 @@ STATUS set_del_id (Set *set, Id id)
     }
 
     /*Checks the position where the id coincides*/
-    while ((set->ids[i] != id) && i < set->n_ids) {
+    while (i < set->n_ids) {
+        if(set->ids[i]==id){
+            break;
+        }
         i++;
     }
 
@@ -106,8 +102,11 @@ STATUS set_del_id (Set *set, Id id)
         return ERROR;
     }
 
-    set->ids[i] = set->ids[set->n_ids - 1];
-    set->ids[set->n_ids - 1] = NO_ID;
+    /*Re-sort all ids*/
+    for(;i<set->n_ids-1;i++){
+        set->ids[i] = set->ids[i+1];
+    }
+
     set->n_ids--;
 
     return OK;
@@ -148,7 +147,10 @@ BOOL set_idInSet (Set* set, Id id)
 
 
     /*Checks the position where the id coincides*/
-    while (set->ids[i] != id && i < set->n_ids) {
+    while (i < set->n_ids) {
+        if(set->ids[i]==id){
+            break;
+        }
         i++;
     }
 
@@ -160,10 +162,11 @@ BOOL set_idInSet (Set* set, Id id)
     }
 }
 
-//Funcion para ver si un set esta vacio(añadida temporalmente, creo que puede ser útil)
+/*Whether the set is empty or not*/
 BOOL set_is_empty(Set *set)
 {
-    /*Error control (esta implementado con true ya que si el set es NULL, aunque no este bien, ese set está vacio*/
+    /*Error control (if the 
+    set is NULL, is also empty*/
     if (!set) {
         return TRUE;
     }
@@ -176,7 +179,10 @@ BOOL set_is_empty(Set *set)
     }
 }
 
+/*returns number of ids*/
 int set_get_n_ids(Set* set) {
+
+    /*CONTROL ERROR*/
     if (!set) {
         return NO_ID;
     }
