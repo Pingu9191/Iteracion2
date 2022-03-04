@@ -13,6 +13,11 @@
 
 #include "types.h"
 
+/**
+* Defines the maximum number of ids that can be saved in a set
+*/
+#define MAX_IDS 20 //Temporal, no se cuanto tiene que ser el tope
+
 typedef struct _Set Set;
 
 /**
@@ -59,12 +64,32 @@ STATUS set_del_id (Set *set, Id id);
   */
 STATUS set_print (Set *set);
 
-//Funcion para ver si una id dada se encuentra en el set (añadida temporalmente, creo que puede ser útil)
+/**
+  * @brief Finds if a id is in a set or not
+  * @author Nicolas Victorino
+  *
+  * @param set a pointer to the given set
+  * @param id the id we want to find
+  * @return TRUE if the set contains the id, FALSE in opposite case
+  */
 BOOL set_idInSet (Set* set, Id id);
 
-//Funcion para ver si un set esta vacio(añadida temporalmente, creo que puede ser útil)
+/**
+  * @brief Tells if a set is empty or not
+  * @author Nicolas Victorino
+  *
+  * @param set a pointer to the given set
+  * @return TRUE if the set is empty or doesnt exist, FALS if contains an id
+  */
 BOOL set_is_empty(Set* set);
 
+/**
+  * @brief Returns the number of ids
+  * @author Nicolas Victorino
+  *
+  * @param set a pointer to the given set
+  * @return NO_ID if set doesnt exist or the number of ids
+  */
 int set_get_n_ids(Set* set);
 
 #endif
