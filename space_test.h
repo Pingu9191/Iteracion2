@@ -2,7 +2,8 @@
  * @brief It declares the tests for the space module
  * 
  * @file space_test.h
- * @author Profesores Pprog
+ * @author Profesores Pprog+
+ * modify by Ignacio Nunnez
  * @version 2.0 
  * @date 09-03-2021
  * @copyright GNU Public License
@@ -78,5 +79,22 @@ void test2_space_get_west();
 void test1_space_get_object();
 void test2_space_get_object();
 void test3_space_get_object();
+void test1_space_add_object();
+void test2_space_add_object();
+void test3_space_add_object();
+void test1_space_delete_object();
+void test2_space_delete_object();
+void test3_space_delete_object();
+void test1_space_create_gdesc();
+void test2_space_create_gdesc();
+void test1_space_destroy_gdesc();
+void test2_space_destroy_gdesc();
+void test3_space_destroy_gdesc();
+void test1_space_get_n_objects();
+void test2_space_get_n_objects();
+void test3_space_get_n_objects();
+void test1_space_set_gdesc();
+void test2_space_set_gdesc();
+void test3_space_set_gdesc();
 
 #endif
