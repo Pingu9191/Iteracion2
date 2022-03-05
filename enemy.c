@@ -1,7 +1,7 @@
 /**
 * @brief It implements enemy module
 *
-* @file Enemy.c
+* @file enemy.c
 * @author Ignacio Nunnez
 * @version 1.0
 * @date 22/02/2022
@@ -107,7 +107,7 @@ const char * enemy_get_name(Enemy* enemy) {
 STATUS enemy_set_location(Enemy * enemy, Id location) {
 
   /* Error control */
-  if (!enemy || !location) {
+  if (!enemy || !location || location == NO_ID) {
     return ERROR;
   }
   
@@ -136,6 +136,10 @@ STATUS enemy_set_health(Enemy * enemy, int health) {
   if (!enemy || !health || health < 0) {
     return ERROR;
   }
+
+  /* Error control */
+  if(health > MAX_HEALTH_ENEMY)
+  return ERROR;
   
   enemy->health = health;
 
