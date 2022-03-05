@@ -216,6 +216,7 @@ STATUS space_set_object(Space* space, Set*set);
 STATUS space_print(Space* space);
 
 int space_get_gdescX();
+
 int space_get_gdescY();
 
 /**
@@ -238,5 +239,13 @@ char ** space_create_gdesc (Space *space);
   */
  STATUS space_remove_gdesc(Space *space);
 
+/**
+  * @brief It returns the number of objects of an space
+  * @author Nicolas Victorino
+  *
+  * 
+  * @param space a pointer to the space
+  * @return OK, if everything goes well or ERROR if there was some mistake
+  */
 int space_get_n_objects(Space *space);
 #endif
