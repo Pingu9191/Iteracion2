@@ -21,13 +21,13 @@ struct _Space {
   Id east;                  /*!< Id of the space at the east */
   Id west;                  /*!< Id of the space at the west */
   Set *object;              /*!< Id of the object located in the space */
-  char **gdesc;
+  char **gdesc;             /*!< Matrix with the gdesc graphics*/
 };
 
 /** space_create allocates memory for a new space
   *  and initializes its members
   */
-Space* space_create(Id id) { // Crea space a traves de una id
+Space* space_create(Id id) {
   Space *newSpace = NULL;
 
   /* Error control */
@@ -60,14 +60,18 @@ STATUS space_destroy(Space* space) {
     return ERROR;
   }
 
+  if(space->gdesc != NULL)
   space_remove_gdesc(space);
+
   free(space);
   space = NULL;
   return OK;
 }
 
+/*Space recieves the gdesc send*/
 STATUS space_set_gdesc(Space* space, char** gdesc) {
 
+  /*CONTROL ERROR*/
   if (!space || !gdesc) {
     return ERROR;
   }
@@ -79,7 +83,10 @@ STATUS space_set_gdesc(Space* space, char** gdesc) {
 
 }
 
+/*Returns the pointer to the gdesc_matrix*/
 const char** space_get_gdesc(Space* space) {
+
+  /*CONTROL ERROR*/
   if(!space)
   return NULL;
 
@@ -89,6 +96,7 @@ const char** space_get_gdesc(Space* space) {
 /** It gets the id of a space
   */
 Id space_get_id(Space* space) {
+  /*CONTROL ERROR*/
   if (!space) {
     return NO_ID;
   }
@@ -98,6 +106,7 @@ Id space_get_id(Space* space) {
 /** It sets the name of a space
   */
 STATUS space_set_name(Space* space, char* name) {
+  /*CONTROL ERROR*/
   if (!space || !name) {
     return ERROR;
   }
@@ -107,9 +116,11 @@ STATUS space_set_name(Space* space, char* name) {
   }
   return OK;
 }
+
 /** It gets the name of a space
   */
 const char * space_get_name(Space* space) {
+  /*CONTROL ERROR*/
   if (!space) {
     return NULL;
   }
@@ -290,47 +301,53 @@ STATUS space_print(Space* space) {
   return OK;
 }
 
+/*ACCES TO MACRO*/
 int space_get_gdescX() {
   return GDESC_X;
 }
 
+/*ACCES TO MACRO*/
 int space_get_gdescY() {
   return GDESC_Y;
 }
 
+/*Creates empty gdesc*/
 char ** space_create_gdesc (Space *space) {
 
-  char **gdesc_new;
-  int i = 0;
-
+  /*CONTROL ERROR*/
   if (!space)
   return NULL;
 
-  if ((gdesc_new = (char **)malloc(sizeof(char *)*GDESC_X)) == NULL) 
-  return ERROR;
+  char **gdesc_new;
+  int i;
+
+  /*Reserves memory for string of pointers*/
+  if ((gdesc_new = (char **)malloc(sizeof(char *)*GDESC_X)) == NULL)
+  return NULL;
+
+  /*Reserves memory for every pointer*/
   for (i = 0; i < GDESC_X; i++) {
-    if ((gdesc_new[i]= (char *)malloc(sizeof (char)*GDESC_Y)) == NULL) {
-      for (i = 0; i < GDESC_X; i++) {
-        if (gdesc_new[i] == NULL) {
-          free(gdesc_new[i]);
-        }
-      }
-      free(gdesc_new);
-      return NULL;
+    if ( (gdesc_new[i] = (char *)malloc(sizeof(char) * GDESC_Y)) == NULL ){
+    free(gdesc_new);
+    return NULL;
     }
   }
 
-  space_set_gdesc(space, gdesc_new);
+  space->gdesc = gdesc_new;
 
-  return (char **)space_get_gdesc(space);
+  return space->gdesc;
 }
 
+/*Frees gdesc of a space*/
 STATUS space_remove_gdesc(Space *space) {
 
   char **gdesc;
   int i = 0;
 
+  /*CONTROL ERROR*/
   if (!space)
+  return ERROR;
+  if(space->gdesc == NULL)
   return ERROR;
 
   gdesc = (char**) space_get_gdesc(space);
@@ -350,7 +367,9 @@ STATUS space_remove_gdesc(Space *space) {
   return OK;
 }
 
+/*Returns number of objects a space has*/
 int space_get_n_objects(Space *space) {
+  /*CONTROL ERROR*/
   if (!space)
   return NO_ID;
 
