@@ -115,8 +115,10 @@ STATUS object_print(Object* object) {
 
 STATUS object_set_graphic(Object *object, char symbol) {
   object->graphic_representation = symbol;
+  return OK;
 }
 
 char object_get_graphic(Object *object) {
   return object->graphic_representation;
 }
+
