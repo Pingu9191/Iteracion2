@@ -46,7 +46,7 @@ STATUS game_create(Game *game);
   * @param cmd the cmd 
   * @return allways Ok
   */
-STATUS game_update(Game *game, T_Command cmd);
+STATUS game_update(Game *game, T_Command cmd,  char*arg);
 
 /**
   * @brief Removes all the info of the game
@@ -95,7 +95,7 @@ Space *game_get_space(Game *game, Id id);
 Id game_get_player_location(Game *game);
 
 /**
-  * @brief returns object-location id
+  * @brief returns the space where an object is located
   * @author Profesores PPROG
   *
   * @param game a pointer to the game
@@ -166,4 +166,5 @@ STATUS game_set_player_location(Game *game, Id id);
   */
 STATUS game_set_object_location(Game *game, Id id_obj, Id id_loc);
 
+int game_get_n_objects(Game *game);
 #endif
