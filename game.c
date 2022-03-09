@@ -583,3 +583,21 @@ STATUS game_command_attack(Game *game)
 
   return OK;
 }
+
+int game_get_n_objects(Game *game) {
+
+  int i = 0;
+
+  if (!game)
+  return NO_ID;
+
+  while (i < MAX_OBJECTS && game->object[i] != NULL) {
+    i++;
+  }
+
+  if (i > MAX_OBJECTS)
+  return NO_ID;
+
+  return i + 1;
+}
+
