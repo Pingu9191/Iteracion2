@@ -291,4 +291,3 @@ STATUS game_create_from_file(Game *game, char *filename)
 
   return OK;
 }
-
