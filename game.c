@@ -18,6 +18,7 @@
 #include "player.h"
 #include "space.h"
 #include "set.h"
+#include "enemy.h"
 
 STATUS game_add_space(Game *game, Space *space);
 STATUS game_add_player(Game *game, Player *player);
@@ -32,7 +33,7 @@ void game_command_next(Game *game);
 void game_command_back(Game *game);
 void game_command_right(Game *game);
 void game_command_left(Game *game);
-STATUS game_command_take(Game *game);
+STATUS game_command_take(Game *game, char* obj);
 STATUS game_command_drop(Game *game);
 
 /**
@@ -254,7 +255,7 @@ Id game_get_object_location(Game *game, Id id_obj)
 /*
 * Gets a command and depending of which one it is, it executes one of the following functions
 */
-STATUS game_update(Game *game, T_Command cmd)
+STATUS game_update(Game *game, T_Command cmd, char *arg)
 {
   game->last_cmd = cmd;
   
@@ -284,7 +285,7 @@ STATUS game_update(Game *game, T_Command cmd)
       game_command_left(game);
       break;
     case TAKE:
-      game_command_take(game);
+      game_command_take(game, arg);
       break;
     case DROP:
       game_command_drop(game);
@@ -337,7 +338,7 @@ void game_print_data(Game *game)
 */
 BOOL game_is_over(Game *game)
 {
-  if (player_get_health == 0) {
+  if (player_get_health(game->player) == 0) {
     return TRUE;
   } else {
   return FALSE;
@@ -508,7 +509,7 @@ void game_command_left(Game *game)
 * Command that make the player take the object.
 * If the player and object aren't in the same room returns ERROR.
 */
-STATUS game_command_take(Game *game) 
+STATUS game_command_take(Game *game, char* obj) 
 {
   char input;
   long id_obj;
