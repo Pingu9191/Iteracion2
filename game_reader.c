@@ -27,9 +27,8 @@ STATUS game_load_spaces(Game *game, char *filename)
   Id id = NO_ID, north = NO_ID, east = NO_ID, south = NO_ID, west = NO_ID;
   Space *space = NULL;
   STATUS status = OK;
+  char **gdesc = NULL;
   int i;
-  //Temporal
-  char **gdesc = space_create_gdesc(space);
   /*Error control*/
   if (!filename)
   {
@@ -43,6 +42,7 @@ STATUS game_load_spaces(Game *game, char *filename)
   {
     return ERROR;
   }
+
 
   /*
   * While the loop reads information in the current line from the file: "hormiguero.dat", it divides that line in smaller tokens.
@@ -65,10 +65,7 @@ STATUS game_load_spaces(Game *game, char *filename)
       south = atol(toks);
       toks = strtok(NULL, "|");
       west = atol(toks);
-      for (i = 0; i < space_get_gdescX(); i++) {
-        toks = strtok(NULL, "|");
-        strcpy(gdesc[i], toks);
-      }
+
     /*If debug is being used, it will print all the information from the current space that is being loaded*/
 #ifdef DEBUG
       printf("Leido: %ld|%s|%ld|%ld|%ld|%ld\n", id, name, north, east, south, west);
@@ -85,8 +82,16 @@ STATUS game_load_spaces(Game *game, char *filename)
         space_set_east(space, east);
         space_set_south(space, south);
         space_set_west(space, west);
-        space_set_gdesc(space, gdesc);
+        space_set_gdesc(space, NULL);
         game_add_space(game, space);
+      }
+
+     gdesc = space_create_gdesc(space);
+      for (i = 0; i < space_get_gdescY(); i++) {
+        toks = strtok(NULL, "|");
+        strcpy(gdesc[i], toks);
+  
+      space_set_gdesc(space, gdesc);
       }
     }
   }
