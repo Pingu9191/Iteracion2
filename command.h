@@ -37,6 +37,6 @@ typedef enum enum_Command {
   *
   * @return 'cmd' with the command scaned
   */
-T_Command command_get_user_input();
+T_Command command_get_user_input(char *arg);
 
 #endif
