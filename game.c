@@ -1,3 +1,4 @@
+
 /** 
  * @brief It implements the game interface and all the associated calls
  * for each command
@@ -217,15 +218,15 @@ STATUS game_set_player_location(Game *game, Id id)
 STATUS game_set_object_location(Game *game, Id id_obj, Id id_loc)
 {
 
-  /*Error control*/
-  if (id_obj == NO_ID || id_loc == NO_ID)
-  {
-    return ERROR;
+  if ( game_get_object_location(game, id_obj) == NO_ID){}
+  else{
+    space_delete_object(game_get_space(game, game_get_object_location(game, id_obj)), id_obj);
   }
 
-  space_set_object(game_get_space(game, id_loc), id_obj);
+  space_add_object(game_get_space(game, id_loc), id_obj);
 
   return OK;
+
 }
 
 /*
@@ -598,4 +599,3 @@ int game_get_n_objects(Game *game) {
 
   return i + 1;
 }
-
