@@ -509,23 +509,20 @@ void game_command_left(Game *game)
 * Command that make the player take the object.
 * If the player and object aren't in the same room returns ERROR.
 */
-STATUS game_command_take(Game *game, char* obj) 
+STATUS game_command_take(Game *game, char *obj) 
 {
-  char input;
-  long id_obj;
-  Id loc;
 
-  /*Ask player which object he wants to pick*/
-  scanf("%c%ld", &input, &id_obj);
-  if(input != 'O')
-  return ERROR;
+  Id id_obj = atoi(obj);
+  if(id_obj == 0){
+    return ERROR;
+  }
 
   /*Check if Player and object are in the same place*/
   if (game_get_object_location(game, id_obj) != game_get_player_location(game)) {
     return ERROR;
   }
 
-  loc = game_get_object_location(game, id_obj);
+  Id loc = game_get_object_location(game, id_obj);
 
   /*Gives the object to the player*/
   if (player_set_object(game->player, id_obj) == ERROR) {
@@ -533,7 +530,7 @@ STATUS game_command_take(Game *game, char* obj)
   }
 
   /*Removes the object from the space*/
-  if (set_del_id(space_get_object(game_get_space(game, loc)), id_obj)==ERROR) {
+  if (space_delete_object(game_get_space(game, loc), id_obj) == ERROR) {
     return ERROR;
   }
 
