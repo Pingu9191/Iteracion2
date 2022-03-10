@@ -3,6 +3,7 @@
  * 
  * @file space.c
  * @author Profesores PPROG
+ * Modified by Nicolas Victorino & Ignacio Nunnez
  * @version 2.0 
  * @date 29-11-2021 
  * @copyright GNU Public License
@@ -68,7 +69,7 @@ STATUS space_destroy(Space* space) {
   return OK;
 }
 
-/*Space recieves the gdesc send*/
+/*Set a given gdesc in a space*/
 STATUS space_set_gdesc(Space* space, char** gdesc) {
 
   /*CONTROL ERROR*/
@@ -76,9 +77,7 @@ STATUS space_set_gdesc(Space* space, char** gdesc) {
     return ERROR;
   }
 
-  if (!strcpy(*(space->gdesc), *gdesc)) {
-    return ERROR;
-  }
+  space->gdesc = gdesc;
   return OK;
 
 }
@@ -312,56 +311,46 @@ int space_get_gdescY() {
 }
 
 /*Creates empty gdesc*/
-char ** space_create_gdesc (Space *space) {
-
-  /*CONTROL ERROR*/
-  if (!space)
-  return NULL;
+char ** space_create_gdesc () {
 
   char **gdesc_new;
   int i;
 
   /*Reserves memory for string of pointers*/
-  if ((gdesc_new = (char **)malloc(sizeof(char *)*GDESC_X)) == NULL)
+  if ((gdesc_new = (char **)malloc(sizeof(char *)*GDESC_Y)) == NULL)
   return NULL;
 
   /*Reserves memory for every pointer*/
-  for (i = 0; i < GDESC_X; i++) {
-    if ( (gdesc_new[i] = (char *)malloc(sizeof(char) * GDESC_Y)) == NULL ){
+  for (i = 0; i < GDESC_Y; i++) {
+    if ( (gdesc_new[i] = (char *)malloc(sizeof(char) * (GDESC_X + 1))) == NULL ){
     free(gdesc_new);
     return NULL;
     }
   }
 
-  space->gdesc = gdesc_new;
-
-  return space->gdesc;
+  return gdesc_new;
 }
 
 /*Frees gdesc of a space*/
 STATUS space_remove_gdesc(Space *space) {
 
-  char **gdesc;
   int i = 0;
 
   /*CONTROL ERROR*/
-  if (!space)
-  return ERROR;
-  if(space->gdesc == NULL)
+  if (!space || !space->gdesc)
   return ERROR;
 
-  gdesc = (char**) space_get_gdesc(space);
 
-  for (i = 0; i < GDESC_X; i++) {
-    if (gdesc[i] != NULL) {
-      free(gdesc[i]);
-      gdesc[i] = NULL;
+  for (i = 0; i < GDESC_Y; i++) {
+    if (space->gdesc[i] != NULL) {
+      free(space->gdesc[i]);
+      space->gdesc[i] = NULL;
     }
   }
   
-  if (gdesc != NULL) {
-    free(gdesc);
-    gdesc = NULL;
+  if (space->gdesc != NULL) {
+    free(space->gdesc);
+    space->gdesc = NULL;
   }
 
   return OK;
