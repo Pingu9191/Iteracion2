@@ -3,7 +3,7 @@
  * 
  * @file space_test.c
  * @author Profesores Pprog
- * modify by Ignacio Nunnez
+ * modify by Ignacio Nunnez & Nicolas Victorino
  * @version 3.0 
  * @date 09-03-2021
  * @copyright GNU Public License
@@ -322,7 +322,7 @@ void test3_space_delete_object() {
 
 void test1_space_create_gdesc() {
   Space *s = NULL;
-  PRINT_TEST_RESULT(space_create_gdesc(s) == NULL);
+  PRINT_TEST_RESULT(space_set_gdesc(s, space_create_gdesc()) == ERROR);
 }
 
 void test2_space_create_gdesc() {
@@ -346,9 +346,10 @@ void test2_space_destroy_gdesc() {
 }
 
 void test3_space_destroy_gdesc() {
-  Space *s;
-  s = space_create(4);
-  char **o = space_create_gdesc(s);
+
+  Space *s = space_create(4);
+  char **o = space_create_gdesc();
+  space_set_gdesc(s, o);
   if(o==NULL) return;
   PRINT_TEST_RESULT(space_remove_gdesc(s) == OK);
   space_destroy(s);
