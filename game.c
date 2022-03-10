@@ -121,7 +121,7 @@ STATUS game_add_object(Game *game, Object *object)
   if (object == NULL)
   return ERROR;
 
-  int i;
+  int i = 0;
 
   /*Searches the first object position available*/
   while (i < MAX_OBJECTS && game->object[i] != NULL)
