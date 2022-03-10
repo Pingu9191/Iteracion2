@@ -1,3 +1,4 @@
+
 /**
  * @brief It defines the space interface
  *
@@ -227,7 +228,7 @@ int space_get_gdescY();
   * @param space a pointer to the space
   * @return char**, if it creates the gdesc succesfully, NULL if something went wrong
   */
-char ** space_create_gdesc (Space *space);
+char ** space_create_gdesc ();
 
 /**
   * @brief It frees the memory allocated for the gdesc
