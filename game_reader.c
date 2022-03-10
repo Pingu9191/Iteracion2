@@ -27,7 +27,7 @@ STATUS game_load_spaces(Game *game, char *filename)
   Id id = NO_ID, north = NO_ID, east = NO_ID, south = NO_ID, west = NO_ID;
   Space *space = NULL;
   STATUS status = OK;
-  char **gdesc = NULL;
+  char **gdesc = space_create_gdesc();
   int i;
   /*Error control*/
   if (!filename)
@@ -65,6 +65,10 @@ STATUS game_load_spaces(Game *game, char *filename)
       south = atol(toks);
       toks = strtok(NULL, "|");
       west = atol(toks);
+      for (i = 0; i < space_get_gdescY(); i++) {
+        toks = strtok(NULL, "|");
+        strcpy(*(gdesc + i), toks);
+      }
 
     /*If debug is being used, it will print all the information from the current space that is being loaded*/
 #ifdef DEBUG
@@ -82,16 +86,8 @@ STATUS game_load_spaces(Game *game, char *filename)
         space_set_east(space, east);
         space_set_south(space, south);
         space_set_west(space, west);
-        space_set_gdesc(space, NULL);
+        space_set_gdesc(space, gdesc);
         game_add_space(game, space);
-      }
-
-     gdesc = space_create_gdesc(space);
-      for (i = 0; i < space_get_gdescY(); i++) {
-        toks = strtok(NULL, "|");
-        strcpy(gdesc[i], toks);
-  
-      space_set_gdesc(space, gdesc);
       }
     }
   }
@@ -102,15 +98,6 @@ STATUS game_load_spaces(Game *game, char *filename)
   {
     status = ERROR;
   }
-
-  for (i = 0; i < space_get_gdescX(); i++) {
-    if(gdesc[i] != NULL) {
-      free(gdesc[i]);
-      gdesc[i] = NULL;
-    }
-  }
-  free(gdesc);
-  gdesc = NULL;
 
   fclose(file);
 
@@ -251,8 +238,9 @@ STATUS game_load_objects(Game *game, char *filename)
       if (object != NULL)
       {
         object_set_name(object, name);
-        game_set_object_location(game, id, loc);
+        object_set_graphic(object, 'n');
         game_add_object(game, object); 
+        game_set_object_location(game, id, loc);
       }
     }
   }
