@@ -412,6 +412,10 @@ STATUS space_remove_object_set(Space* space) {
 
 char ** space_copy_gdesc(char ** gdesc) {
   int i = 0; 
+  
+  if (!gdesc)
+  return NULL;
+  
   char **gdesc_n = space_create_gdesc();
 
   for (i = 0; i < GDESC_Y; i++) {
