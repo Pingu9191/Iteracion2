@@ -1,11 +1,11 @@
 /** 
- * @brief It implements the space module
+ * @brief It implements the space module to manage the spaces in the ant game (including location, name, set of objects, its gdesc...)
  * 
  * @file space.c
  * @author Profesores PPROG
  * Modified by Nicolas Victorino & Ignacio Nunnez
- * @version 2.0 
- * @date 29-11-2021 
+ * @version 3.1 
+ * @date 12-03-2022 
  * @copyright GNU Public License
  */
 
@@ -61,11 +61,22 @@ STATUS space_destroy(Space* space) {
     return ERROR;
   }
 
-  if(space->gdesc != NULL)
-  space_remove_gdesc(space);
+  if(space->gdesc != NULL) {
+    space_remove_gdesc(space);
+    space->gdesc = NULL;
+  }
 
-  free(space);
-  space = NULL;
+
+  if(space->object != NULL) {
+    space_remove_object_set(space);
+    //set_destroy(space->object);
+    space->object = NULL;
+  }
+
+  if (space != NULL){
+    free(space);
+    space = NULL;
+  }
   return OK;
 }
 
@@ -317,14 +328,17 @@ char ** space_create_gdesc () {
   int i;
 
   /*Reserves memory for string of pointers*/
-  if ((gdesc_new = (char **)malloc(sizeof(char *)*GDESC_Y)) == NULL)
+  if ((gdesc_new = (char **)malloc(sizeof(char *)*GDESC_Y)) == NULL) {
   return NULL;
+  }
 
   /*Reserves memory for every pointer*/
   for (i = 0; i < GDESC_Y; i++) {
     if ( (gdesc_new[i] = (char *)malloc(sizeof(char) * (GDESC_X + 1))) == NULL ){
-    free(gdesc_new);
-    return NULL;
+      for (i--; i >= 0; i--) {
+        free(gdesc_new[i]);
+      }
+      return NULL;
     }
   }
 
@@ -337,7 +351,7 @@ STATUS space_remove_gdesc(Space *space) {
   int i = 0;
 
   /*CONTROL ERROR*/
-  if (!space || !space->gdesc)
+  if (!space)
   return ERROR;
 
 
@@ -348,9 +362,28 @@ STATUS space_remove_gdesc(Space *space) {
     }
   }
   
+  
   if (space->gdesc != NULL) {
     free(space->gdesc);
     space->gdesc = NULL;
+  }
+  
+  return OK;
+}
+
+STATUS space_remove_gdesc_game(char ** gdesc) {
+  int i = 0;
+
+  /*CONTROL ERROR*/
+  if (!gdesc)
+  return ERROR;
+
+
+  for (i = 0; i < GDESC_Y; i++) {
+    if (gdesc[i] != NULL) {
+      free(gdesc[i]);
+      gdesc[i] = NULL;
+    }
   }
 
   return OK;
@@ -363,4 +396,27 @@ int space_get_n_objects(Space *space) {
   return NO_ID;
 
   return set_get_n_ids(space->object);
+}
+
+STATUS space_remove_object_set(Space* space) {
+
+  if(space == NULL)
+  return ERROR;
+
+  if(space->object != NULL) {
+    set_destroy(space->object);
+  }
+
+  return OK;
+}
+
+char ** space_copy_gdesc(char ** gdesc) {
+  int i = 0; 
+  char **gdesc_n = space_create_gdesc();
+
+  for (i = 0; i < GDESC_Y; i++) {
+    strcpy(gdesc_n[i], gdesc[i]);
+  }
+
+  return gdesc_n;
 }
