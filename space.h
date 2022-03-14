@@ -4,8 +4,9 @@
  *
  * @file space.h
  * @author Profesores PPROG
- * @version 2.0
- * @date 29-11-2021
+ * Modified by Nicolas Victorino && Ignacio Nunnez
+ * @version 3.1
+ * @date 12-03-2022
  * @copyright GNU Public License
  */
 
@@ -231,7 +232,7 @@ int space_get_gdescY();
 char ** space_create_gdesc ();
 
 /**
-  * @brief It frees the memory allocated for the gdesc
+  * @brief It frees the memory allocated for the gdesc in a given space
   * @author Nicolas Victorino
   *
   * 
@@ -249,4 +250,35 @@ char ** space_create_gdesc ();
   * @return OK, if everything goes well or ERROR if there was some mistake
   */
 int space_get_n_objects(Space *space);
+
+/**
+  * @brief It removes the objects set of an space
+  * @author Nicolas Victorino
+  *
+  * 
+  * @param space a pointer to the space
+  * @return OK, if everything goes well or ERROR if there was some mistake
+  */
+STATUS space_remove_object_set(Space* space);
+
+/**
+  * @brief It frees the memory allocated for the gdesc given the gdesc
+  * @author Nicolas Victorino
+  *
+  * 
+  * @param gdesc a pointer to the gdesc
+  * @return OK, if everything goes well or ERROR if there was some mistake
+  */
+STATUS space_remove_gdesc_game(char ** gdesc);
+
+/**
+  * @brief It makes a hard copy of a gdesc in a differnt pointer
+  * @author Nicolas Victorino
+  *
+  * 
+  * @param gdesc a pointer to the gdesc we want to copy
+  * @return New pointer if everything went right, or NULL in case an error occured
+  */
+char ** space_copy_gdesc(char ** gdesc);
+
 #endif
