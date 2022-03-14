@@ -5,8 +5,9 @@
  * 
  * @file game.c
  * @author Profesores PPROG
- * @version 2.0 
- * @date 14-02-2022 
+ * Modified by Nicolas Victorino && Ignacio Nunnez
+ * @version 5.0 
+ * @date 13-03-2022 
  * @copyright GNU Public License
  */
 
@@ -30,12 +31,13 @@ STATUS game_set_object_location(Game *game, Id id_obj, Id id_loc);
 
 void game_command_unknown(Game *game);
 void game_command_exit(Game *game);
-void game_command_next(Game *game);
-void game_command_back(Game *game);
-void game_command_right(Game *game);
-void game_command_left(Game *game);
+STATUS game_command_next(Game *game);
+STATUS game_command_back(Game *game);
+STATUS game_command_right(Game *game);
+STATUS game_command_left(Game *game);
 STATUS game_command_take(Game *game, char* obj);
 STATUS game_command_drop(Game *game);
+STATUS game_command_attack(Game *game);
 
 /**
    Game interface implementation
@@ -78,6 +80,8 @@ STATUS game_destroy(Game *game)
   }
 
   player_destroy(game->player);
+
+  enemy_destroy(game->enemy);
 
   return OK;
 }
@@ -152,6 +156,19 @@ STATUS game_add_player(Game *game, Player *player)
     }
 
   game->player = player;
+
+  return OK;
+}
+
+STATUS game_add_enemy(Game *game, Enemy *enemy) 
+{
+  /*Error control*/
+  if (enemy == NULL)
+    {
+      return ERROR;
+    }
+
+  game->enemy = enemy;
 
   return OK;
 }
@@ -271,26 +288,30 @@ STATUS game_update(Game *game, T_Command cmd, char *arg)
       break;
 
     case NEXT:
-      game_command_next(game);
+      return game_command_next(game);
       break;
 
     case BACK:
-      game_command_back(game);
+      return game_command_back(game);
       break;
 
     case RIGHT:
-      game_command_right(game);
+      return game_command_right(game);
       break;
 
     case LEFT:
-      game_command_left(game);
+      return game_command_left(game);
       break;
     case TAKE:
-      game_command_take(game, arg);
+      return game_command_take(game, arg);
       break;
     case DROP:
-      game_command_drop(game);
+      return game_command_drop(game);
       break;  
+    
+    case ATTACK:
+      return game_command_attack(game);
+      break;
 
     default:
       break;
@@ -363,7 +384,7 @@ void game_command_exit(Game *game)
 * Command that moves the player one space position to thes south, in case there is one.
 * If not it doesnt move the player
 */
-void game_command_next(Game *game)
+STATUS game_command_next(Game *game)
 {
   /*Initializes the private variables current_id and space_id*/
   int i = 0;
@@ -376,7 +397,7 @@ void game_command_next(Game *game)
   /*Error control. Checks if the id of the space of the player is correctly saved*/
   if (space_id == NO_ID)
   {
-    return;
+    return ERROR;
   }
 
   /*Searches if there is a space south of the space of the player, and in case there is one, it moves the player to that space*/
@@ -389,17 +410,19 @@ void game_command_next(Game *game)
       if (current_id != NO_ID)
       {
         game_set_player_location(game, current_id);
+      } else {
+        return ERROR;
       }
-      return;
-    }
+    } 
   }
+  return OK;
 }
 
 /*
 * Command that moves the player one space position to the north, in case there is one.
 * If not it doesnt move the player
 */
-void game_command_back(Game *game)
+STATUS game_command_back(Game *game)
 {
 
     /*Initializes the private variables current_id and space_id*/
@@ -413,7 +436,7 @@ void game_command_back(Game *game)
   /*Error control. Checks if the id of the space of the player is correctly saved*/
   if (NO_ID == space_id)
   {
-    return;
+    return ERROR;
   }
 
 /*Searches if there is a space north of the space of the player, and in case there is one, it moves the player to that space*/
@@ -426,17 +449,20 @@ void game_command_back(Game *game)
       if (current_id != NO_ID)
       {
         game_set_player_location(game, current_id);
+        
+      } else {
+      return ERROR;
       }
-      return;
-    }
+    } 
   }
+  return OK;
 }
 
 /*
 * Command that moves the player one space position to the east, in case there is one.
 * If not it doesnt move the player
 */
-void game_command_right(Game *game)
+STATUS game_command_right(Game *game)
 {
 
     /*Initializes the private variables current_id and space_id*/
@@ -450,7 +476,7 @@ void game_command_right(Game *game)
   /*Error control. Checks if the id of the space of the player is correctly saved*/
   if (NO_ID == space_id)
   {
-    return;
+    return ERROR;
   }
 
 /*Searches if there is a space east of the space of the player, and in case there is one, it moves the player to that space*/
@@ -463,17 +489,20 @@ void game_command_right(Game *game)
       if (current_id != NO_ID)
       {
         game_set_player_location(game, current_id);
+
+      } else {
+      return ERROR;
       }
-      return;
-    }
-  }
+    } 
+  }        
+  return OK;
 }
 
 /*
 * Command that moves the player one space position to the west, in case there is one.
 * If not it doesnt move the player
 */
-void game_command_left(Game *game)
+STATUS game_command_left(Game *game)
 {
 
     /*Initializes the private variables current_id and space_id*/
@@ -487,7 +516,7 @@ void game_command_left(Game *game)
   /*Error control. Checks if the id of the space of the player is correctly saved*/
   if (NO_ID == space_id)
   {
-    return;
+    return ERROR;
   }
 
 /*Searches if there is a space west of the space of the player, and in case there is one, it moves the player to that space*/
@@ -500,10 +529,12 @@ void game_command_left(Game *game)
       if (current_id != NO_ID)
       {
         game_set_player_location(game, current_id);
-      }
-      return;
-    }
+      } else {
+      return ERROR;
+      } 
+    } 
   }
+  return OK;
 }
 
 /*
@@ -512,6 +543,12 @@ void game_command_left(Game *game)
 */
 STATUS game_command_take(Game *game, char *obj) 
 {
+  if(obj[0] != 'o' && obj[0] != 'O')
+  return ERROR;
+
+  obj[0] = obj[1];
+  obj[1] = obj[2];
+  obj[2] = '\0';
 
   Id id_obj = atoi(obj);
   if(id_obj == 0){
@@ -520,6 +557,10 @@ STATUS game_command_take(Game *game, char *obj)
 
   /*Check if Player and object are in the same place*/
   if (game_get_object_location(game, id_obj) != game_get_player_location(game)) {
+    return ERROR;
+  }
+
+  if (player_get_object(game->player) != -1) {
     return ERROR;
   }
 
@@ -599,3 +640,12 @@ int game_get_n_objects(Game *game) {
 
   return i + 1;
 }
+
+void game_set_cmd_st(Game* game, STATUS cmd_st) {
+  game->cmd_status = cmd_st;
+}
+
+STATUS game_get_cmd_st(Game *game) {
+  return game->cmd_status;
+}
+
