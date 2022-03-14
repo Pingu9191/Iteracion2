@@ -609,6 +609,10 @@ STATUS game_command_attack(Game *game)
   if(player_get_location(game->player) != enemy_get_location(game->enemy))
   return ERROR;
 
+  /*Cheks if enemy is alive*/ 
+  if (enemy_get_health(game->enemy) == 0)
+  return ERROR; 
+   
   /*Generates random number*/
   srand(time(NULL));
   int i = rand() % 10;
