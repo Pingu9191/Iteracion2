@@ -353,6 +353,9 @@ STATUS space_remove_gdesc(Space *space) {
   /*CONTROL ERROR*/
   if (!space)
   return ERROR;
+  
+  if (!(space->gdesc))
+  return ERROR;
 
 
   for (i = 0; i < GDESC_Y; i++) {
